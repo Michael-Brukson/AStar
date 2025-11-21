@@ -1,6 +1,7 @@
 import numpy as np
 from AStar import AStar
 from utils import Plotting
+from drawing import GridMake
 
 def main():
     p: Plotting = Plotting()
@@ -31,7 +32,10 @@ def main():
 
 
     # Define the source and destination
-    grid, src, dest = p.from_image("maze.png")
+    gm = GridMake()
+    gm.run()
+
+    grid, src, dest = p.from_image(gm.get_filename(dir=True))
     print(f"{src} -> {dest}")
 
     a: AStar = AStar(x=grid.shape[0], y=grid.shape[1])

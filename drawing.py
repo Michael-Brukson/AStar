@@ -11,7 +11,7 @@ class GridMake:
 
     def __init__(self, width: int= 600, height: int= 440):
         menus = [
-                ("☰", [("Open", self.__file_select), ("New", None)]),
+                ("☰", [("Open", self.__file_select), ("New", self.__clear_canvas)]),
                 ("⚙", [("Temp", None)])
                 ]
 
@@ -63,15 +63,22 @@ class GridMake:
     def __stop_draw(self, event) -> None:
         self.__last_x, self.__last_y = None, None
 
+    
+    def __clear_canvas(self) -> None:
+        self.__canvas.delete("all")
+        self.__filename_field.delete("0.0", "end")
+
+
 
     def __start_canvas(self, width: int, height: int) -> None:
-        self.__canvas = ctk.CTkCanvas(self.__upper, bg="white", width=width, height=height)
+        padx: int = 60 # padding under canvas 
+        self.__canvas = ctk.CTkCanvas(self.__upper, bg="white", width=width, height=height-padx)
         self.__canvas.pack()
 
         self.__image_cache = None
         self.__canvas_photo = None
 
-        self.__pil_image = Image.new("RGBA", (width, height), "WHITE")
+        self.__pil_image = Image.new("RGBA", (width, height-padx), "WHITE")
         self.__pil_draw = ImageDraw.Draw(self.__pil_image)
 
         self.__last_x, self.__last_y = None, None
@@ -109,7 +116,8 @@ class GridMake:
 
 
     def __open_file(self, wind, event) -> None:        
-        image = self.__image_cache
+        image : Image = self.__image_cache[0]
+        filename: str = self.get_filename()
 
         canvas_w = self.__canvas.winfo_width()
         canvas_h = self.__canvas.winfo_height()
@@ -121,21 +129,20 @@ class GridMake:
                 canvas_w, canvas_h = 600, 400
 
         img_w, img_h = image.size
-        ratio = min(canvas_w / img_w, canvas_h / img_h, 1.0)
-        new_size = (max(1, int(img_w * ratio)), max(1, int(img_h * ratio)))
-        if new_size != image.size:
-            image = image.resize(new_size, Image.LANCZOS)
+        ratio = min(canvas_w / img_w, canvas_h / img_h)
+        new_size = (int(img_w * ratio)), int(img_h * ratio)
+        image = image.resize(new_size, Image.LANCZOS)
+
+        x = (canvas_w - new_size[0]) // 2
+        y = (canvas_h - new_size[1]) // 2
+
+        self.__pil_image.paste(image, (x, y), image)        
+
+        self.__filename_field.delete("0.0", "end")
+        self.__filename_field.insert("0.0", filename[:filename.rfind('.')])
 
         image = ImageTk.PhotoImage(image)
         self.__canvas_photo = image
-
-        try:
-            self.__pil_image.paste(image, (x, y), image)
-        except Exception:
-            try:
-                self.__pil_image.paste(image.convert("RGBA"), (x, y))
-            except Exception:
-                pass
 
         self.__canvas.delete("all")
         x = (canvas_w - new_size[0]) // 2
@@ -210,7 +217,7 @@ class GridMake:
         path = self.__SAVE_DIR + filename
         try:
             image = Image.open(path).convert("RGBA")
-            self.__image_cache = image
+            self.__image_cache = (image, filename)
             return image.copy()
         except Exception:
             return
@@ -239,6 +246,16 @@ class GridMake:
             print(f"Image saved as {filename}")
         except Exception as e:
             print("Failed to save image:", e)
+        
+        self.__kill()
+
+    
+    def get_filename(self, dir: bool = False) -> str:
+        return self.__SAVE_DIR + self.__image_cache[1] if dir else self.__image_cache[1]
+
+
+    def __kill(self) -> None:
+        self.__root.destroy()
 
 
     def run(self) -> None:
