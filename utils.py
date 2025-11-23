@@ -14,9 +14,11 @@ class Plotting():
         plt.imshow(grid, cmap='gray')
 
         if np.any(path, None):
-            x: list = path[:, 0]
-            y: list = path[:, 1]
-            plt.plot(x, y, color='red', linewidth=3)
+            x: list = path[:, 1]
+            y: list = path[:, 0]
+            plt.scatter(x[0], y[0], c='red', s=100, zorder=5, edgecolors='black')
+            plt.scatter(x[-1], y[-1], c='blue', s=100, zorder=5, edgecolors='black')
+            plt.plot(x, y, color='green', linewidth=3)
         
         plt.show()
 

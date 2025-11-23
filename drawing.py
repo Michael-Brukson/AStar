@@ -44,19 +44,23 @@ class GridMake:
 
     def __start_draw(self, event) -> None:
         self.__last_x, self.__last_y = event.x, event.y
+        self.__draw(event)
 
 
     def __draw(self, event) -> None:
-        if self.__last_x is not None and self.__last_y is not None:
+        def draw_line():
             self.__canvas.create_line(self.__last_x, self.__last_y, event.x, event.y, 
-                                     fill=self.__fill.get(), width=2, capstyle=ctk.ROUND, smooth=ctk.TRUE)
+                                        fill=self.__fill.get(), width=2, capstyle=ctk.ROUND, smooth=ctk.TRUE)
             try:
                 self.__pil_draw.line([self.__last_x, self.__last_y, event.x, event.y],
-                                 fill=self.__fill.get(), width=2)
+                                fill=self.__fill.get(), width=2)
             except Exception as e:
                 print(e)
                 pass
-            
+
+        if self.__last_x is not None and self.__last_y is not None:
+            draw_line()
+
             self.__last_x, self.__last_y = event.x, event.y
 
 
@@ -129,6 +133,7 @@ class GridMake:
                 canvas_w, canvas_h = 600, 400
 
         img_w, img_h = image.size
+        # TODO: For images both smaller and larger than the current canvas size, rather than scaling them, resize the canvas to their size but keep the appearance so they are still conveniently editable
         ratio = min(canvas_w / img_w, canvas_h / img_h)
         new_size = (int(img_w * ratio)), int(img_h * ratio)
         image = image.resize(new_size, Image.LANCZOS)
@@ -242,6 +247,7 @@ class GridMake:
         filename = self.__SAVE_DIR + name + ".png"
 
         try:
+            self.__image_cache = (None, name + ".png")
             self.__pil_image.save(filename, "PNG")
             print(f"Image saved as {filename}")
         except Exception as e:

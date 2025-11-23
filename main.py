@@ -18,24 +18,15 @@ def main():
         [1, 0, 1, 1, 1, 1, 0, 1, 1, 1],
         [1, 1, 1, 0, 0, 0, 1, 0, 0, 1]
     ])
-    # grid: np.ndarray = np.array([
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    # ])
+    
+    src: tuple = (1, 1)
+    dest: tuple = (6, 9)
 
-
-    # Define the source and destination
     gm = GridMake()
     gm.run()
 
     grid, src, dest = p.from_image(gm.get_filename(dir=True))
+    # grid, src, dest = p.from_image("mazes/maze.png")
     print(f"{src} -> {dest}")
 
     a: AStar = AStar(x=grid.shape[0], y=grid.shape[1])
@@ -44,7 +35,8 @@ def main():
     path: np.ndarray = np.array(a.search(grid, src, dest))
     print(f"The path is: \n{path}")
 
-    p.show_grid(grid=grid.T, path=path)
+    p.show_grid(grid=grid)
+    p.show_grid(grid=grid, path=path)
 
 
 

@@ -22,7 +22,6 @@ class AStar:
     # Calculate the heuristic value of a cell (Euclidean distance to destination)
     def _h_value(self, row: int, col: int, dest: list) -> float:
         return ((row - dest[0]) ** 2 + (col - dest[1]) ** 2) ** 0.5
-        # return math.pow(math.pow(row - dest[0], 2) + (col - math.pow(dest[1], 2)), 0.5)
 
     # Trace the path from source to destination
     def _trace_path(self, cell_details: list, dest: list) -> list:
