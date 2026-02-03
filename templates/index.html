@@ -1,0 +1,15 @@
+<!doctype html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"> 
+    <title>MNIST Demo</title>
+</head>
+<body>
+    <label id="drawingLabel">Draw the number: 0</label>
+    <canvas id="drawingCanvas" width="500" height="500"></canvas>
+    <button id="clearDrawing">Clear Drawing</button>
+    <button id="submitDrawing">Submit Drawing</button>
+    <div> Your Drawings:</div>
+    <div id="imagesContainer"></div>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

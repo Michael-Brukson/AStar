@@ -1,0 +1,57 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Lato', sans-serif;
+    font-size: 32px;
+    background-color: #f0f0f0;
+}
+
+button{
+    margin: 20px;
+    transform: scale(2);
+}
+
+div {
+    margin: 20px;
+}
+
+#drawingCanvas {
+    border: 2px solid #000;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#submitDrawing {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#submitDrawing:hover {
+    background-color: #0056b3;
+}
+
+#submitDrawing:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#imagesContainer {
+    width: 100%;
+    max-width: 600px;
+    height: 200px; /* Set a fixed height */
+    overflow-y: auto; /* Make it scrollable */
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fff;
+}
