@@ -1,14 +1,22 @@
 <!doctype html>
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"> 
-    <title>MNIST Demo</title>
+    <title>AStar Demo</title>
 </head>
 <body>
-    <label id="drawingLabel">Draw the number: 0</label>
+    <label id="drawingLabel">Draw a map!</label>
     <canvas id="drawingCanvas" width="500" height="500"></canvas>
+    <span id="radios">
+        <input type="radio" id="source" name="pencil" value=0>
+        <label for="source">Source</label>
+        <input type="radio" id="draw" name="pencil" value=1 checked>
+        <label for="line">Draw</label>
+        <input type="radio" id="destination" name="pencil" value=2>
+        <label for="destination">Destination</label>
+    </span>
     <button id="clearDrawing">Clear Drawing</button>
     <button id="submitDrawing">Submit Drawing</button>
-    <div> Your Drawings:</div>
+    <div>Your Drawings:</div>
     <div id="imagesContainer"></div>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>

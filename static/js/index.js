@@ -1,9 +1,14 @@
 const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d');
 const drawingLabel = document.getElementById('drawingLabel');
+const imagesContainer = document.getElementById('imagesContainer')
+const radios = document.querySelectorAll('input[name="pencil"]');
 let drawing = false;
-let currentNumber = 0;
-let freeDrawingMode = false;
+
+console.log(radios)
+
+const source = [];
+const destination = [];
 
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mouseup', stopDrawing);
@@ -43,6 +48,7 @@ function stopDrawing() {
 
 function draw(event) {
     if (!drawing) return;
+    console.log(getCurrentRadioValue());
     const pos = getCursorPosition(event);
     ctx.lineWidth = 10;
     ctx.lineCap = 'round';
@@ -54,6 +60,36 @@ function draw(event) {
     ctx.moveTo(pos.x, pos.y);
 }
 
+function getCurrentRadioValue(){
+    const radio = document.querySelector('input[name="pencil"]:checked')
+    return radio.value;
+}
+
+function sendImage(dataURL){
+    const blob = dataURLToBlob(dataURL);
+    const formData = new FormData();
+
+    const time = new Date().toISOString();
+    formData.append('upload', blob, `${time}.png`);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/upload', true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            console.log('Uploaded successfully');
+            
+            const img = document.createElement('img');
+            img.src = dataURL;
+            img.width, img.height = 100, 300;
+            imagesContainer.appendChild(img);
+        } else {
+            console.log('Upload failed');
+        }
+    };
+    xhr.send(formData);
+    return JSON.parse(xhr.responseText);
+}
+
 document.getElementById('submitDrawing').addEventListener('click', function () {
     if (!ctx.getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0)) {
         alert('You have not drawn anything!');
@@ -61,51 +97,8 @@ document.getElementById('submitDrawing').addEventListener('click', function () {
     }
 
     const dataURL = canvas.toDataURL('image/png');
-    const blob = dataURLToBlob(dataURL);
-    const formData = new FormData();
 
-    if (!freeDrawingMode) {
-        const time = new Date().toISOString();
-        formData.append('upload', blob, `${time}_${currentNumber}.png`);
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/upload', true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                console.log('Uploaded successfully');
-                currentNumber++;
-                if (currentNumber < 10) {
-                    drawingLabel.textContent = `Draw the number: ${currentNumber}`;
-                } else {
-                    drawingLabel.textContent = 'Free drawing mode enabled! Draw anything.';
-                    freeDrawingMode = true;
-                }
-                const img = document.createElement('img');
-                img.src = dataURL;
-                img.width = 100;
-                img.height = 100; 
-                imagesContainer.appendChild(img);
-            } else {
-                console.log('Upload failed');
-            }
-        };
-        xhr.send(formData);
-    } else {
-        const time = new Date().toISOString();
-        formData.append('upload', blob, `${time}_${currentNumber}.png`);
-        console.log(blob);
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/infer', true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
-                drawingLabel.textContent = `Predicted digit: ${response.prediction}`;
-            } else {
-                drawingLabel.textContent = 'Inference failed, model not loaded';
-            }
-        };
-        xhr.send(formData);
-    }
+    const response = sendImage(dataURL);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
