@@ -48,17 +48,17 @@ class AStar:
         # Check if the source and destination are valid
         if not self._is_valid(src[0], src[1]) or not self._is_valid(dest[0], dest[1]):
             print("Source or destination is out of reach")
-            return
+            return []
 
         # Check if the source and destination are unblocked
         if not self._is_unblocked(grid, src[0], src[1]) or not self._is_unblocked(grid, dest[0], dest[1]):
             print("Source or the destination is unreachable")
-            return
+            return []
 
         # Check if we are already at the destination
         if self._is_destination(src[0], src[1], dest):
             print("We are already at the destination")
-            return
+            return []
 
         # Initialize the closed list (visited cells)
         closed_list = [[False for _ in range(self.COL)] for _ in range(self.ROW)]
@@ -74,7 +74,7 @@ class AStar:
         cell_details[i][j].parent_i = i
         cell_details[i][j].parent_j = j
 
-        # Initialize the open list (cells to be visited) with the start cell
+        # Initialize the open list (cells to b e visited) with the start cell
         open_list = []
         heapq.heappush(open_list, (0.0, i, j))
 

@@ -8,6 +8,7 @@ def route_(app: Flask) -> routing.Map:
     
     return app.url_map
 
+
 def create_app() -> Flask:
     app: Flask = Flask(__name__)
     
