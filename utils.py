@@ -22,9 +22,15 @@ class Plotting():
         
         plt.show()
 
+    # TODO: Replace finding of sources with finding of centroids
+    def get_centroid():
+        pass
+
 
     def from_image(self, file: str) -> tuple:
         img: np.ndarray = cv.imread(file)[:,:,:3]
+        # TODO: Replace this with finding centroids instead
+        # TODO: Once centroid found, replace rest of srcs/dests with white
         src: tuple = np.argwhere(np.all(img == self.RED, axis=-1))[0]
         dest: tuple = np.argwhere(np.all(img == self.BLUE, axis=-1))[0]
         
