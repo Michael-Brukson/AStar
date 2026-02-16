@@ -5,14 +5,14 @@ const imagesContainer = document.getElementById('imagesContainer')
 const radios = document.querySelectorAll('input[name="pencil"]');
 let drawing = false;
 
-console.log(radios)
+var source = [];
+var destination = [];
 
-const source = [];
-const destination = [];
+const COLORS = {"source":"red", "draw":"black", "destination":"blue"};
 
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mouseup', stopDrawing);
-canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mousemove', drawLine);
 
 canvas.addEventListener('touchstart', (e) => {
     startDrawing(e.touches[0]);
@@ -36,8 +36,24 @@ function getCursorPosition(event) {
 
 function startDrawing(event) {
     drawing = true;
-    ctx.beginPath();
+
+    const radioVal = getCurrentRadioValue();
     const pos = getCursorPosition(event);
+
+    // TODO: Make a little less ugly
+    if (radioVal === "source"){
+        if (source.length > 0) drawDot(source[0], source[1], 'white', radius=6);
+        source = [pos.x, pos.y]; 
+        drawDot(pos.x, pos.y, COLORS[radioVal]);
+        drawing = false;
+    } else if (radioVal === "destination"){
+        if (destination.length > 0) drawDot(destination[0], destination[1], 'white', radius=6);
+        destination = [pos.x, pos.y];
+        drawDot(pos.x, pos.y, COLORS[radioVal]);
+        drawing = false;
+    }
+
+    ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
 }
 
@@ -46,13 +62,26 @@ function stopDrawing() {
     ctx.beginPath();
 }
 
-function draw(event) {
+function drawDot(x, y, color, radius=5){
+    ctx.beginPath();
+
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+
+    ctx.fillStyle = color;
+
+    ctx.fill();
+
+    ctx.closePath();
+}
+
+function drawLine(event) {
     if (!drawing) return;
-    console.log(getCurrentRadioValue());
+    const radioVal = getCurrentRadioValue();
     const pos = getCursorPosition(event);
+
     ctx.lineWidth = 10;
     ctx.lineCap = 'round';
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = COLORS[radioVal];
 
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
