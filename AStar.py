@@ -17,7 +17,6 @@ class AStar:
     # Check if a cell is the destination
     def _is_destination(self, row: int, col: int, dest: list) -> bool:
         return row == dest[0] and col == dest[1]
-        # return row, col == dest[0], des[1]
 
     # Calculate the heuristic value of a cell (Euclidean distance to destination)
     def _h_value(self, row: int, col: int, dest: list) -> float:
@@ -47,17 +46,17 @@ class AStar:
     def search(self, grid: list, src: list, dest: list) -> list:
         # Check if the source and destination are valid
         if not self._is_valid(src[0], src[1]) or not self._is_valid(dest[0], dest[1]):
-            print("Source or destination is out of reach")
+            # print("Source or destination is out of reach")
             return []
 
         # Check if the source and destination are unblocked
         if not self._is_unblocked(grid, src[0], src[1]) or not self._is_unblocked(grid, dest[0], dest[1]):
-            print("Source or the destination is unreachable")
+            # print("Source or the destination is unreachable")
             return []
 
         # Check if we are already at the destination
         if self._is_destination(src[0], src[1], dest):
-            print("We are already at the destination")
+            # print("We are already at the destination")
             return []
 
         # Initialize the closed list (visited cells)
@@ -104,7 +103,6 @@ class AStar:
                         # Set the parent of the destination cell
                         cell_details[new_i][new_j].parent_i = i
                         cell_details[new_i][new_j].parent_j = j
-                        print(f"The destination cell is found at {i},{j}")
                         # Trace path from source to destination
                         path = self._trace_path(cell_details, dest)
                         found_dest = True
@@ -129,3 +127,4 @@ class AStar:
         # If the destination is not found after visiting all cells
         if not found_dest:
             print("Failed to find the destination cell")
+            return []
