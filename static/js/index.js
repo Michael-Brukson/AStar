@@ -1,7 +1,9 @@
 const canvas = document.getElementById('drawingCanvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
 const drawingLabel = document.getElementById('drawingLabel');
-const imagesContainer = document.getElementById('imagesContainer')
+const imagesContainer = document.getElementById('imagesContainer');
+const submitDrawing = document.getElementById('submitDrawing');
+const clearDrawing = document.getElementById('clearDrawing');
 const radios = document.querySelectorAll('input[name="pencil"]');
 let drawing = false;
 
@@ -9,6 +11,9 @@ var source = [];
 var destination = [];
 
 const COLORS = {"source":"red", "draw":"black", "destination":"blue"};
+
+submitDrawing.addEventListener('click', submitCanvas);
+clearDrawing.addEventListener('click', clearCanvas);
 
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mouseup', stopDrawing);
@@ -19,9 +24,11 @@ canvas.addEventListener('touchstart', (e) => {
 });
 canvas.addEventListener('touchend', stopDrawing);
 canvas.addEventListener('touchmove', (e) => {
-    draw(e.touches[0]);
+    drawLine(e.touches[0]);
     e.preventDefault();
 });
+
+initCanvas();
 
 function getCursorPosition(event) {
     const rect = canvas.getBoundingClientRect(); 
@@ -94,32 +101,35 @@ function getCurrentRadioValue(){
     return radio.value;
 }
 
-function sendImage(dataURL){
+async function sendImage(dataURL){
+    const img = document.createElement('img');
+    img.src = dataURL;
+    img.width = canvas.width / 5;
+    img.height = canvas.height / 5;
+    imagesContainer.appendChild(img);
+
     const blob = dataURLToBlob(dataURL);
     const formData = new FormData();
 
     const time = new Date().toISOString();
     formData.append('upload', blob, `${time}.png`);
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/upload', true);
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            console.log('Uploaded successfully');
-            
-            const img = document.createElement('img');
-            img.src = dataURL;
-            img.width, img.height = 100, 300;
-            imagesContainer.appendChild(img);
-        } else {
-            console.log('Upload failed');
-        }
-    };
-    xhr.send(formData);
-    return JSON.parse(xhr.responseText);
+    const response = await fetch('/get_path', {
+        method: 'POST',
+        body: formData
+    });
+
+    if (!response.ok) {
+        console.log('Upload failed');
+        throw new Error('Upload failed');
+    }
+
+    const json = await response.json();
+
+    return json;
 }
 
-document.getElementById('submitDrawing').addEventListener('click', function () {
+async function submitCanvas(event) {
     if (!ctx.getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0)) {
         alert('You have not drawn anything!');
         return;
@@ -127,14 +137,24 @@ document.getElementById('submitDrawing').addEventListener('click', function () {
 
     const dataURL = canvas.toDataURL('image/png');
 
-    const response = sendImage(dataURL);
+    const response = await sendImage(dataURL);
+    console.log(response);
+}
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-});
+function clearCanvas(event) {
+    source.length = 0;
+    destination.length = 0;
 
-clearDrawing.addEventListener('click', function () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-});
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+};
+
+// remove transparency from canvas
+function initCanvas(){
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+}
 
 function dataURLToBlob(dataURL) {
     const parts = dataURL.split(',');
