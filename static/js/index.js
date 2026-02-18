@@ -81,6 +81,7 @@ function drawDot(x, y, color, radius=5){
     ctx.closePath();
 }
 
+// TODO: Add erasing. (just drawing white)
 function drawLine(event) {
     if (!drawing) return;
     const radioVal = getCurrentRadioValue();
@@ -102,12 +103,6 @@ function getCurrentRadioValue(){
 }
 
 async function sendImage(dataURL){
-    const img = document.createElement('img');
-    img.src = dataURL;
-    img.width = canvas.width / 5;
-    img.height = canvas.height / 5;
-    imagesContainer.appendChild(img);
-
     const blob = dataURLToBlob(dataURL);
     const formData = new FormData();
 
@@ -129,6 +124,8 @@ async function sendImage(dataURL){
     return json;
 }
 
+// TODO: add check to make sure that source and destination still exist in canvas (make sure that color at coords is red/blue respectively)
+// TODO: add separate canvas and drawing of path from source to destination
 async function submitCanvas(event) {
     if (!ctx.getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0)) {
         alert('You have not drawn anything!');
@@ -136,6 +133,12 @@ async function submitCanvas(event) {
     }
 
     const dataURL = canvas.toDataURL('image/png');
+
+    const img = document.createElement('img');
+    img.src = dataURL;
+    img.width = canvas.width / 5;
+    img.height = canvas.height / 5;
+    imagesContainer.appendChild(img);
 
     const response = await sendImage(dataURL);
     console.log(response);
