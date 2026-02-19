@@ -17,6 +17,18 @@ button{
 
 div {
     margin: 20px;
+    display: flex;
+    position: relative;
+}
+
+.vertical {
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#h_method {
+    align-self: flex-start;
+    width: fit-content;
 }
 
 #drawingCanvas {
@@ -26,7 +38,7 @@ div {
     margin-bottom: 20px;
 }
 
-#submitDrawing {
+#submitMap {
     padding: 10px 20px;
     font-size: 16px;
     color: #fff;
@@ -35,15 +47,22 @@ div {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    align-self: center;
+    max-width: 75%;
 }
 
-#submitDrawing:hover {
+#submitMap:hover {
     background-color: #0056b3;
 }
 
-#submitDrawing:disabled {
+#submitMap:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+#clearMap{
+    align-self: center;
+    max-width: 100%;
 }
 
 #imagesContainer {

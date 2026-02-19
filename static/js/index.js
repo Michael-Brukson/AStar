@@ -2,8 +2,8 @@ const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d', { willReadFrequently: true });
 const drawingLabel = document.getElementById('drawingLabel');
 const imagesContainer = document.getElementById('imagesContainer');
-const submitDrawing = document.getElementById('submitDrawing');
-const clearDrawing = document.getElementById('clearDrawing');
+const submitMap = document.getElementById('submitMap');
+const clearMap = document.getElementById('clearMap');
 const radios = document.querySelectorAll('input[name="pencil"]');
 let drawing = false;
 
@@ -17,8 +17,8 @@ const RED = [255, 0, 0, 255];
 const BLUE = [0, 0, 255, 255];
 const COLORS = {"source":"red", "draw":"black", "destination":"blue"};
 
-submitDrawing.addEventListener('click', submitCanvas);
-clearDrawing.addEventListener('click', clearCanvas);
+submitMap.addEventListener('click', submitCanvas);
+clearMap.addEventListener('click', clearCanvas);
 
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mouseup', stopDrawing);
@@ -174,7 +174,13 @@ async function submitCanvas(event) {
     imagesContainer.appendChild(img);
 
     const path = await sendImage(dataURL);
-    drawPath(path);
+
+    if (!isEmpty(path)){
+        drawPath(path);
+    }
+    else {
+        alert('destination is unreachable!');
+    }
 }
 
 function clearCanvas(event) {

@@ -1,5 +1,6 @@
 import heapq
 from Cell import Cell
+from typing import Literal
 
 class AStar:
     def __init__(self, width: int, height:int):
@@ -15,15 +16,34 @@ class AStar:
         return grid[row][col] == 1
 
     # Check if a cell is the destination
-    def _is_destination(self, row: int, col: int, dest: list) -> bool:
+    def _is_destination(self, row: int, col: int, dest: tuple) -> bool:
         return row == dest[0] and col == dest[1]
 
+    # TODO: check if it's faster to remove the root operation entirely when root is 1
+    def __euclidean_dist(self, row: int, col: int, dest: tuple, root: Literal[0.5, 1] = 0.5) -> float:
+        x_dist: int = row - dest[0]
+        y_dist: int = col - dest[1]
+        return ((x_dist) ** 2 + (y_dist) ** 2) ** root
+
+    def __manhattan_dist(self, row: int, col: int, dest: tuple) -> float:
+        x_dist: int = abs(row - dest[0])
+        y_dist: int = abs(col - dest[1])
+        return x_dist + y_dist
+    
+    def __chebyschev_dist(self, row: int, col: int, dest: tuple) -> float:
+        return max(abs(a - b) for a, b in zip([row, col], dest))
+
     # Calculate the heuristic value of a cell (Euclidean distance to destination)
-    def _h_value(self, row: int, col: int, dest: list) -> float:
-        return ((row - dest[0]) ** 2 + (col - dest[1]) ** 2) ** 0.5
+    def _h_value(self, row: int, col: int, dest: tuple, method: Literal["euclidean", "manhattan", "chebyshev"] = "euclidean") -> float:
+        if method == "euclidean":
+            return self.__euclidean_dist(row, col, dest)
+        elif method == "manhattan":
+            return self.__manhattan_dist(row, col, dest)
+        else:
+            return self.__chebyschev_dist(row, col, dest)
 
     # Trace the path from source to destination
-    def _trace_path(self, cell_details: list, dest: list) -> list:
+    def _trace_path(self, cell_details: list, dest: tuple) -> list:
         path = []
         row, col = dest[0], dest[1]
 
@@ -43,7 +63,7 @@ class AStar:
         return path
 
     # Implement the A* search algorithm
-    def search(self, grid: list, src: list, dest: list) -> list:
+    def search(self, grid: list, src: tuple, dest: tuple, h_method: Literal["euclidean", "manhattan", "chebyshev"] = "euclidean") -> list:
         # Check if the source and destination are valid
         if not self._is_valid(src[0], src[1]) or not self._is_valid(dest[0], dest[1]):
             # print("Source or destination is out of reach")
@@ -110,7 +130,7 @@ class AStar:
                     else:
                         # Calculate the new f, g, and h values
                         g_new = cell_details[i][j].g + 1.0
-                        h_new = self._h_value(new_i, new_j, dest)
+                        h_new = self._h_value(new_i, new_j, dest, h_method)
                         f_new = g_new + h_new
 
                         # If the cell is not in the open list or the new f value is smaller

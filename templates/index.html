@@ -5,19 +5,33 @@
     <title>AStar Demo</title>
 </head>
 <body>
-    <label id="drawingLabel">Draw a map!</label>
-    <canvas id="drawingCanvas" width="{{ canvas_dim['width'] }}" height="{{ canvas_dim['height'] }}"></canvas>
-    <span id="radios">
-        <input type="radio" id="source" name="pencil" value="source">
-        <label for="source">Source</label>
-        <input type="radio" id="draw" name="pencil" value="draw" checked>
-        <label for="line">Draw</label>
-        <input type="radio" id="destination" name="pencil" value="destination">
-        <label for="destination">Destination</label>
-    </span>
-    <button id="clearDrawing">Clear Drawing</button>
-    <button id="submitDrawing">Submit Drawing</button>
-    <div>Your Drawings:</div>
+    <label for="drawingCanvas" id="drawingLabel">Draw a map!</label>
+    <div>
+        <div>
+            <label for="h_method">Choose a Method:</label>
+            <select id="h_method" name="h_method">
+                {% for h_method in h_methods %}
+                    <option value="{{ h_method }}">{{ h_method }}</option>
+                {% endfor %}
+            </select>
+
+            <canvas id="drawingCanvas" width="{{ canvas_dim['width'] }}" height="{{ canvas_dim['height'] }}"></canvas>
+        </div>
+        <div class="vertical">
+            <span id="radios">
+                <input type="radio" id="source" name="pencil" value="source">
+                <label for="source">Source</label>
+                <input type="radio" id="draw" name="pencil" value="draw" checked>
+                <label for="line">Draw</label>
+                <input type="radio" id="destination" name="pencil" value="destination">
+                <label for="destination">Destination</label>
+            </span>
+    
+            <button id="clearMap">Clear Map</button>
+            <button id="submitMap">Submit Map</button>
+        </div>
+    </div>
+    <div>Your Maps:</div>
     <div id="imagesContainer"></div>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>

@@ -29,7 +29,7 @@ def astar_tkinter(plotter: Plotting = Plotting()) -> None:
     grid, src, dest = plotter.from_image("mazes/2026-02-19T003933.795Z.png")
     print(f"{src} -> {dest}")
 
-    a: AStar = AStar(x=grid.shape[0], y=grid.shape[1])
+    a: AStar = AStar(*grid.shape)
 
     # Run the A* search algorithm
     path: np.ndarray = np.array(a.search(grid, src, dest))
