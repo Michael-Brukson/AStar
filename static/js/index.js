@@ -10,6 +10,11 @@ let drawing = false;
 var source = [];
 var destination = [];
 
+function isEmpty(arr) {return !(arr.length > 0)};
+
+// R, G, B, alpha
+const RED = [255, 0, 0, 255];
+const BLUE = [0, 0, 255, 255];
 const COLORS = {"source":"red", "draw":"black", "destination":"blue"};
 
 submitDrawing.addEventListener('click', submitCanvas);
@@ -49,12 +54,12 @@ function startDrawing(event) {
 
     // TODO: Make a little less ugly
     if (radioVal === "source"){
-        if (source.length > 0) drawDot(source[0], source[1], 'white', radius=6);
+        if (!isEmpty(source)) drawDot(source[0], source[1], 'white', radius=6);
         source = [pos.x, pos.y]; 
         drawDot(pos.x, pos.y, COLORS[radioVal]);
         drawing = false;
     } else if (radioVal === "destination"){
-        if (destination.length > 0) drawDot(destination[0], destination[1], 'white', radius=6);
+        if (!isEmpty(destination)) drawDot(destination[0], destination[1], 'white', radius=6);
         destination = [pos.x, pos.y];
         drawDot(pos.x, pos.y, COLORS[radioVal]);
         drawing = false;
@@ -124,14 +129,42 @@ async function sendImage(dataURL){
     return json;
 }
 
-// TODO: add check to make sure that source and destination still exist in canvas (make sure that color at coords is red/blue respectively)
-// TODO: add separate canvas and drawing of path from source to destination
-async function submitCanvas(event) {
-    if (!ctx.getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0)) {
-        alert('You have not drawn anything!');
-        return;
+// function to check if value at location in image matches value in parameter
+function matches(coords, value){
+    [x, y] = coords;
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    return pixel.join('') === value.join('');
+}
+
+function isValidCanvas(){
+    if (isEmpty(source) || isEmpty(destination)){
+        alert('the source or destination does not exist!');
+        return false;
+    }
+    else if (!(matches(source, RED) && matches(destination, BLUE))){
+        alert('the source or destination does not exist!');
+        return false;
+    }
+    return true;
+}
+
+function drawPath(path){
+    ctx.beginPath();
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = 'green';
+
+    ctx.moveTo(path[0][1], path[0][0]);
+
+    for (let i = 1; i < path.length; i++) {
+        ctx.lineTo(path[i][1], path[i][0]);
     }
 
+    ctx.stroke();
+}
+
+// TODO: add separate canvas and drawing of path from source to destination
+async function submitCanvas(event) {
+    if(!isValidCanvas) return;
     const dataURL = canvas.toDataURL('image/png');
 
     const img = document.createElement('img');
@@ -140,8 +173,8 @@ async function submitCanvas(event) {
     img.height = canvas.height / 5;
     imagesContainer.appendChild(img);
 
-    const response = await sendImage(dataURL);
-    console.log(response);
+    const path = await sendImage(dataURL);
+    drawPath(path);
 }
 
 function clearCanvas(event) {

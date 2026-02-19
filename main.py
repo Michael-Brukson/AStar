@@ -22,20 +22,20 @@ def astar_tkinter(plotter: Plotting = Plotting()) -> None:
     src: tuple = (1, 1)
     dest: tuple = (6, 9)
 
-    gm: GridMake = GridMake()
-    gm.run()
+    # gm: GridMake = GridMake()
+    # gm.run()
 
-    grid, src, dest = plotter.from_image(gm.get_filename(dir=True))
-    # grid, src, dest = plotter.from_image("mazes/maze.png")
+    # grid, src, dest = plotter.from_image(gm.get_filename(dir=True))
+    grid, src, dest = plotter.from_image("mazes/2026-02-19T003933.795Z.png")
     print(f"{src} -> {dest}")
 
     a: AStar = AStar(x=grid.shape[0], y=grid.shape[1])
 
     # Run the A* search algorithm
     path: np.ndarray = np.array(a.search(grid, src, dest))
-    print(f"The path is: \n{path}")
+    # print(f"The path is: \n{path}")
 
-    plotter.show_grid(grid=grid)
+    # plotter.show_grid(grid=grid)
     plotter.show_grid(grid=grid, path=path)
 
 def astar_flask() -> None:
@@ -49,6 +49,7 @@ def main():
     p: Plotting = Plotting()
 
     astar_flask()
+    # astar_tkinter()
 
 
 if __name__ == "__main__":

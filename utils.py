@@ -32,7 +32,7 @@ class Plotting():
         x: int = int(np.mean(xs))
         y: int = int(np.mean(ys))
 
-        return (x, y)
+        return (y, x)
 
     # in a black/white image with normalized values 0/1, set a list of coordinates to white (1)
     def _set_available(self, img: np.ndarray, coords: np.ndarray) -> np.ndarray:
@@ -69,7 +69,7 @@ class Plotting():
 if __name__ == "__main__":
     p: Plotting = Plotting()
 
-    file: str = 'mazes/testing.png'
+    file: str = 'mazes/2026-02-19T003933.795Z.png'
 
     grid, src, dest = p.from_image(file=file)
     
