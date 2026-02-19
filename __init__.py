@@ -60,7 +60,10 @@ def create_app() -> Flask:
     app.config['UPLOAD_FOLDER'] = './mazes'
     app.config['ASTAR'] = AStar(**app.config['CANVAS_DIM'])
     app.config['PLOTTER'] = Plotting()
-    app.config['H_METHODS'] = ["euclidean", "manhattan", "chebyshev"]
+    app.config['H_METHODS'] = {"euclidean" : "$$\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}$$", 
+                               "manhattan" : "$$|x_2-x_1| + |y_2-y_1|$$", 
+                               "chebyshev" : "$$max(|x_2-x_1|, |y_2-y_1|)$$"
+                              }
     
     route_(app)
     

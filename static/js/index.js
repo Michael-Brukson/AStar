@@ -141,7 +141,7 @@ function isValidCanvas(){
         alert('the source or destination does not exist!');
         return false;
     }
-    else if (!(matches(source, RED) && matches(destination, BLUE))){
+    if (!(matches(source, RED) && matches(destination, BLUE))){
         alert('the source or destination does not exist!');
         return false;
     }
@@ -164,7 +164,7 @@ function drawPath(path){
 
 // TODO: add separate canvas and drawing of path from source to destination
 async function submitCanvas(event) {
-    if(!isValidCanvas) return;
+    if(!isValidCanvas()) return;
     const dataURL = canvas.toDataURL('image/png');
 
     const img = document.createElement('img');

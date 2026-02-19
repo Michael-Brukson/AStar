@@ -2,19 +2,13 @@
 <head>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"> 
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <title>AStar Demo</title>
 </head>
 <body>
-    <label for="drawingCanvas" id="drawingLabel">Draw a map!</label>
+    <h3 id="drawingLabel">Draw a map!</h3>
     <div>
         <div>
-            <label for="h_method">Choose a Method:</label>
-            <select id="h_method" name="h_method">
-                {% for h_method in h_methods %}
-                    <option value="{{ h_method }}">{{ h_method }}</option>
-                {% endfor %}
-            </select>
-
             <canvas id="drawingCanvas" width="{{ canvas_dim['width'] }}" height="{{ canvas_dim['height'] }}"></canvas>
         </div>
         <div class="vertical">
@@ -22,17 +16,32 @@
                 <input type="radio" id="source" name="pencil" value="source">
                 <label for="source">Source</label>
                 <input type="radio" id="draw" name="pencil" value="draw" checked>
-                <label for="line">Draw</label>
+                <label for="draw">Draw</label>
                 <input type="radio" id="destination" name="pencil" value="destination">
                 <label for="destination">Destination</label>
             </span>
-    
+
             <button id="clearMap">Clear Map</button>
             <button id="submitMap">Submit Map</button>
+
+            <div>
+                <label class="h_method" for="h_method">Choose a Method:</label>
+                <select id="h_method" class="h_method">
+                    {% for h_method in h_methods %}
+                        <option value="{{ h_method }}">{{ h_method }}</option>
+                    {% endfor %}
+                </select>
+                <div id="equation">
+                </div>
+            </div>
         </div>
     </div>
     <div>Your Maps:</div>
     <div id="imagesContainer"></div>
+    <script>
+        const h_methods = {{ h_methods|tojson|safe }};
+    </script>
+    <script src="{{ url_for('static', filename='js/equation.js') }}"></script>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>

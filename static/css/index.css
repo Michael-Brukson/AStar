@@ -26,8 +26,10 @@ div {
     overflow: hidden;
 }
 
-#h_method {
-    align-self: flex-start;
+.h_method {
+    font-size: 25px;
+    padding: 5px;
+    align-self: center;
     width: fit-content;
 }
 
