@@ -12,7 +12,7 @@ from utils import Plotting
 def route_(app: Flask) -> routing.Map:
     @app.route('/', methods=['GET'])
     def index():
-        return render_template("index.html")
+        return render_template("index.html", canvas_dim = app.config['CANVAS_DIM'])
     
     def save_file(file: FileStorage) -> str:
         if file.filename == '':
@@ -56,8 +56,9 @@ def route_(app: Flask) -> routing.Map:
 
 def create_app() -> Flask:
     app: Flask = Flask(__name__)
+    app.config['CANVAS_DIM'] = {'width': 500, 'height': 500}
     app.config['UPLOAD_FOLDER'] = './mazes'
-    app.config['ASTAR'] = AStar(x=500, y=500)
+    app.config['ASTAR'] = AStar(**app.config['CANVAS_DIM'])
     app.config['PLOTTER'] = Plotting()
     
     route_(app)
