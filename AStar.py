@@ -2,9 +2,9 @@ import heapq
 from Cell import Cell
 
 class AStar:
-    def __init__(self, x: int, y:int):
-        self.ROW: int = x
-        self.COL: int = y
+    def __init__(self, width: int, height:int):
+        self.ROW: int = width
+        self.COL: int = height
 
     # Check if a cell is valid (within the grid)
     def _is_valid(self, row: int, col: int) -> bool:
