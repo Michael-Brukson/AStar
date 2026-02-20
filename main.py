@@ -26,7 +26,7 @@ def astar_tkinter(plotter: Plotting = Plotting()) -> None:
     # gm.run()
 
     # grid, src, dest = plotter.from_image(gm.get_filename(dir=True))
-    grid, src, dest = plotter.from_image("mazes/2026-02-19T003933.795Z.png")
+    grid, src, dest = plotter.from_image("mazes/2026-02-20T001455.073Z.png")
     print(f"{src} -> {dest}")
 
     a: AStar = AStar(*grid.shape)

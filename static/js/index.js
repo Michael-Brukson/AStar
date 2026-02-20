@@ -22,6 +22,7 @@ clearMap.addEventListener('click', clearCanvas);
 
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mouseup', stopDrawing);
+canvas.addEventListener('mouseleave', stopDrawing);
 canvas.addEventListener('mousemove', drawLine);
 
 canvas.addEventListener('touchstart', (e) => {
@@ -113,6 +114,7 @@ async function sendImage(dataURL){
 
     const time = new Date().toISOString();
     formData.append('upload', blob, `${time}.png`);
+    formData.append('h_method', h_method.value);
 
     const response = await fetch('/get_path', {
         method: 'POST',
