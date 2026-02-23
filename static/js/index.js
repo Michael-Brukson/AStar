@@ -15,7 +15,7 @@ function isEmpty(arr) {return !(arr.length > 0)};
 // R, G, B, alpha
 const RED = [255, 0, 0, 255];
 const BLUE = [0, 0, 255, 255];
-const COLORS = {"source":"red", "draw":"black", "destination":"blue"};
+const COLORS = {"source":"red", "pencil":"black", "eraser":"white", "destination":"blue"};
 
 submitMap.addEventListener('click', submitCanvas);
 clearMap.addEventListener('click', clearCanvas);
@@ -27,12 +27,12 @@ canvas.addEventListener('mousemove', drawLine);
 
 canvas.addEventListener('touchstart', (e) => {
     startDrawing(e.touches[0]);
-});
+}, {passive: true});
 canvas.addEventListener('touchend', stopDrawing);
 canvas.addEventListener('touchmove', (e) => {
     drawLine(e.touches[0]);
     e.preventDefault();
-});
+}, {passive: true});
 
 initCanvas();
 
@@ -53,17 +53,17 @@ function startDrawing(event) {
     const radioVal = getCurrentRadioValue();
     const pos = getCursorPosition(event);
 
-    // TODO: Make a little less ugly
-    if (radioVal === "source"){
-        if (!isEmpty(source)) drawDot(source[0], source[1], 'white', radius=6);
-        source = [pos.x, pos.y]; 
-        drawDot(pos.x, pos.y, COLORS[radioVal]);
+    const setPoint = (point, setter, color) => {
+        if (!isEmpty(point)) drawDot(point[0], point[1], 'white', 6);
+        setter([pos.x, pos.y]);
+        drawDot(pos.x, pos.y, COLORS[color]);
         drawing = false;
-    } else if (radioVal === "destination"){
-        if (!isEmpty(destination)) drawDot(destination[0], destination[1], 'white', radius=6);
-        destination = [pos.x, pos.y];
-        drawDot(pos.x, pos.y, COLORS[radioVal]);
-        drawing = false;
+    };
+
+    if (radioVal === "source") {
+        setPoint(source, (val) => source = val, radioVal);
+    } else if (radioVal === "destination") {
+        setPoint(destination, (val) => destination = val, radioVal);
     }
 
     ctx.beginPath();
@@ -93,7 +93,7 @@ function drawLine(event) {
     const radioVal = getCurrentRadioValue();
     const pos = getCursorPosition(event);
 
-    ctx.lineWidth = 10;
+    ctx.lineWidth = parseFloat(slider.value);
     ctx.lineCap = 'round';
     ctx.strokeStyle = COLORS[radioVal];
 
@@ -114,7 +114,7 @@ async function sendImage(dataURL){
 
     const time = new Date().toISOString();
     formData.append('upload', blob, `${time}.png`);
-    formData.append('h_method', h_method.value);
+    formData.append('h_method', h_method_dropdown.value);
 
     const response = await fetch('/get_path', {
         method: 'POST',

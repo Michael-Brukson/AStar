@@ -26,11 +26,30 @@ div {
     overflow: hidden;
 }
 
+.horizontal{
+    align-items: center;
+    justify-content: flex-start;
+    justify-self: flex-start;
+    padding: 0px;
+    padding-right: 5px;    
+    margin: 5px;
+    margin-left: 0px;
+}
+
 .h_method {
     font-size: 25px;
     padding: 5px;
-    align-self: center;
+    display: flex;
     width: fit-content;
+}
+
+#h_method_dropdown{
+    padding: 0px;
+}
+
+.equation{
+    padding: 5px;
+    margin: 0%;
 }
 
 #radios {
