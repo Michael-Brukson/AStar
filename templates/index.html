@@ -8,26 +8,23 @@
 <body>
     <h3 id="drawingLabel">Draw a map!</h3>
     <div>
-        <canvas id="drawingCanvas" width="{{ canvas_dim['width'] }}" height="{{ canvas_dim['height'] }}"></canvas>
+        <canvas id="canvas" width="{{ canvas_dim['width'] }}" height="{{ canvas_dim['height'] }}"></canvas>
         <div class="vertical">
             <div class="flex" id="radios">
                 <input type="radio" id="source" name="pencil" value="source">
                 <label for="source">Source</label>
                 <input type="radio" id="pencil" name="pencil" value="pencil" checked>
                 <label for="pencil">Pencil</label>
-                <input type="radio" id="eraser" name="pencil" value="eraser" checked>
+                <input type="radio" id="eraser" name="pencil" value="eraser">
                 <label for="eraser">Eraser</label>
                 <input type="radio" id="destination" name="pencil" value="destination">
                 <label for="destination">Destination</label>
             </div>
 
             <div class="slidecontainer">
-                <input type="range" min="1" max="10" step="any" value="5" class="slider" id="brushSize">
+                <input type="range" min="1" max="20" step="any" value="5" class="slider" id="brushSize">
                 <span id="brushSizeDisplay"></span>
             </div>
-
-            <button id="clearMap">Clear Map</button>
-            <button id="submitMap">Submit Map</button>
 
             <div class="h_method vertical">
                 <div class="h_method horizontal">
@@ -42,6 +39,9 @@
                 <label class="equation" for="equation">Current H Statistic:</label>
                 <div class="equation" id="equation"></div>
             </div>
+            
+            <button id="clearMap">Clear Map</button>
+            <button id="submitMap">Submit Map</button>
         </div>
     </div>
     <div>Your Maps:</div>

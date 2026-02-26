@@ -1,9 +1,4 @@
-const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d', { willReadFrequently: true });
-const drawingLabel = document.getElementById('drawingLabel');
-const imagesContainer = document.getElementById('imagesContainer');
-const submitMap = document.getElementById('submitMap');
-const clearMap = document.getElementById('clearMap');
 const radios = document.querySelectorAll('input[name="pencil"]');
 let drawing = false;
 
@@ -93,7 +88,7 @@ function drawLine(event) {
     const radioVal = getCurrentRadioValue();
     const pos = getCursorPosition(event);
 
-    ctx.lineWidth = parseFloat(slider.value);
+    ctx.lineWidth = parseFloat(brushSize.value);
     ctx.lineCap = 'round';
     ctx.strokeStyle = COLORS[radioVal];
 

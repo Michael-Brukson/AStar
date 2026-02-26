@@ -1,10 +1,7 @@
-const h_method_dropdown = document.getElementById('h_method_dropdown');
 const equation = document.getElementById('equation');
-var slider = document.getElementById("brushSize");
-var brushSizeDisplay = document.getElementById("brushSizeDisplay")
 
 h_method_dropdown.addEventListener('change', updateEquation);
-slider.addEventListener('input', updateBrushSizeDisplay);
+brushSize.addEventListener('input', updateBrushSizeDisplay);
 
 updateBrushSizeDisplay();
 updateEquation();
@@ -15,7 +12,7 @@ function updateEquation(){
 }
 
 function updateBrushSizeDisplay(){
-    let value = parseFloat(slider.value);
+    let value = parseFloat(brushSize.value);
     value = value.toFixed(2);
     brushSizeDisplay.innerHTML = value;
 }
