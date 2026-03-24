@@ -1,29 +1,69 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    margin: 0;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+}
+
+:root{
+    --brushSizeThumbThickness: 5px;
+}
+
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 0px;
     font-family: 'Lato', sans-serif;
-    font-size: 32px;
+    font-size: clamp(40px, 2.2vw, 50px);
     background-color: #f0f0f0;
 }
 
 button{
-    margin: 20px;
-    transform: scale(2);
+    margin: 12px 0;
+    padding: 0.6em 1.1em;
+    font-size: 0.7em;
+    transform: none;
 }
 
-div {
-    margin: 20px;
+.main {
+    width: min(90%, 1100px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    margin: 12px 0 10px;
+}
+
+.canvas-pane {
+    flex: 1 1 520px;
+    min-width: 280px;
+    display: flex;
+    justify-content: center;
+}
+
+.controls {
+    flex: 0 1 360px;
+    min-width: 280px;
+}
+
+.vertical,
+.horizontal,
+.h_method {
     display: flex;
     position: relative;
 }
 
 .vertical {
     flex-direction: column;
-    overflow: hidden;
+    max-width: 100%;
 }
 
 .horizontal{
@@ -34,6 +74,7 @@ div {
     padding-right: 5px;    
     margin: 5px;
     margin-left: 0px;
+    max-width: 100%;
 }
 
 .h_method {
@@ -55,6 +96,11 @@ div {
 
 #radios {
     align-self: center;
+    display: flex;
+    flex-wrap: wrap;
+    white-space: nowrap;
+    width: fit-content;
+    gap: 6px 10px;
 }
 
 #canvas {
@@ -62,11 +108,19 @@ div {
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    display: block;
+    width: min(100%, 700px);
+    height: auto;
+    max-width: 100%;
+}
+
+#clearMap{
+    align-self: center;
+    max-width: 100%;
 }
 
 #submitMap {
     padding: 10px 20px;
-    font-size: 16px;
     color: #fff;
     background-color: #007bff;
     border: none;
@@ -86,17 +140,35 @@ div {
     cursor: not-allowed;
 }
 
-#clearMap{
-    align-self: center;
-    max-width: 100%;
-}
-
 #imagesContainer {
-    width: 100%;
+    width: min(100%, 600px);
     max-width: 600px;
     height: 200px; /* Set a fixed height */
     overflow-y: auto; /* Make it scrollable */
     border: 1px solid #ccc;
     padding: 10px;
     background-color: #fff;
+    margin: 10px 0 20px;
+}
+
+#brushSize {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 10px;
+    border-radius: 10%;
+}
+
+#brushSize::-webkit-slider-thumb {
+    appearance: none;
+    width: var(--brushSizeThumbThickness);
+    height: var(--brushSizeThumbThickness);
+    background: rgb(0, 101, 253);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#brushSize::-moz-range-thumb {
+  width: var(--brushSizeThumbThickness);
+  height: var(--brushSizeThumbThickness);
+  cursor: pointer;
 }

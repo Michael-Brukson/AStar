@@ -1,4 +1,10 @@
-const equation = document.getElementById('equation');
+// attempted fix at IOS moving screen on draw, error: $ is not defined
+// $(window).bind(
+//   'touchmove',
+//    function(e) {
+//     e.preventDefault();
+//   }
+// );
 
 h_method_dropdown.addEventListener('change', updateEquation);
 brushSize.addEventListener('input', updateBrushSizeDisplay);
@@ -14,5 +20,6 @@ function updateEquation(){
 function updateBrushSizeDisplay(){
     let value = parseFloat(brushSize.value);
     value = value.toFixed(2);
-    brushSizeDisplay.innerHTML = value;
+    document.documentElement.style.setProperty('--brushSizeThumbThickness', String(value) + 'px');
+    brushSizeDisplay.innerHTML = String(value) + ' px';
 }

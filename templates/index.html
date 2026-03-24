@@ -1,5 +1,6 @@
 <!doctype html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"> 
     <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
@@ -7,22 +8,28 @@
 </head>
 <body>
     <h3 id="drawingLabel">Draw a map!</h3>
-    <div>
-        <canvas id="canvas" width="{{ canvas_dim['width'] }}" height="{{ canvas_dim['height'] }}"></canvas>
-        <div class="vertical">
+    <div class="main">
+        <div class="canvas-pane">
+            <canvas id="canvas" width="{{ canvas_dim['width'] }}" height="{{ canvas_dim['height'] }}"></canvas>
+        </div>
+        <div class="vertical controls">
             <div class="flex" id="radios">
-                <input type="radio" id="source" name="pencil" value="source">
-                <label for="source">Source</label>
-                <input type="radio" id="pencil" name="pencil" value="pencil" checked>
-                <label for="pencil">Pencil</label>
-                <input type="radio" id="eraser" name="pencil" value="eraser">
-                <label for="eraser">Eraser</label>
-                <input type="radio" id="destination" name="pencil" value="destination">
-                <label for="destination">Destination</label>
+                <div>
+                    <input type="radio" id="pencil" name="pencil" value="pencil" checked>
+                    <label for="pencil">Pencil</label>
+                    <input type="radio" id="eraser" name="pencil" value="eraser">
+                    <label for="eraser">Eraser</label>
+                </div>
+                <div>
+                    <input type="radio" id="source" name="pencil" value="source">
+                    <label for="source">Source</label>
+                    <input type="radio" id="destination" name="pencil" value="destination">
+                    <label for="destination">Destination</label>
+                </div>
             </div>
 
             <div class="slidecontainer">
-                <input type="range" min="1" max="20" step="any" value="5" class="slider" id="brushSize">
+                <input type="range" min="1" max="20" step="any" value="5" id="brushSize">
                 <span id="brushSizeDisplay"></span>
             </div>
 
