@@ -42,7 +42,7 @@ def astar_flask() -> None:
     from __init__ import create_app
     
     app: Flask = create_app()
-    app.run(host='0.0.0.0', port=55317, debug=True)
+    app.run(host='0.0.0.0', port=53317, debug=True)
     
 
 def main():

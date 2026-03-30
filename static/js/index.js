@@ -21,13 +21,14 @@ canvas.addEventListener('mouseleave', stopDrawing);
 canvas.addEventListener('mousemove', drawLine);
 
 canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
     startDrawing(e.touches[0]);
-}, {passive: true});
+}, {passive: false});
 canvas.addEventListener('touchend', stopDrawing);
 canvas.addEventListener('touchmove', (e) => {
-    drawLine(e.touches[0]);
     e.preventDefault();
-}, {passive: true});
+    drawLine(e.touches[0]);
+}, {passive: false});
 
 initCanvas();
 
@@ -85,6 +86,7 @@ function drawDot(x, y, color, radius=5){
 // TODO: Add erasing. (just drawing white)
 function drawLine(event) {
     if (!drawing) return;
+    
     const radioVal = getCurrentRadioValue();
     const pos = getCursorPosition(event);
 
@@ -126,7 +128,7 @@ async function sendImage(dataURL){
     return json;
 }
 
-// function to check if value at location in image matches value in parameter
+// function to check if value at location in  matches value in parameter
 function matches(coords, value){
     [x, y] = coords;
     const pixel = ctx.getImageData(x, y, 1, 1).data;
@@ -159,16 +161,36 @@ function drawPath(path){
     ctx.stroke();
 }
 
+async function addImageToContainer(dataURL, container, scale){
+    const img = document.createElement('img');
+    img.dataset.source = source;
+    img.dataset.destination = destination;
+    img.src = dataURL;
+    img.width = canvas.width / scale;
+    img.height = canvas.height / scale;
+    container.appendChild(img);
+    ['touchend', 'mouseup'].forEach((e) => {
+      img.addEventListener(e, restoreImageFromContainer, {passive: false});
+    });
+}
+
+function restoreImageFromContainer(event) {
+    let img = new Image;
+    img.onload = function(){
+        ctx.drawImage(img,0,0);
+    };
+    img.src = this.src;
+
+    source = this.dataset.source.split(',').map(Number);
+    destination = this.dataset.destination.split(',').map(Number);
+}
+
 // TODO: add separate canvas and drawing of path from source to destination
 async function submitCanvas(event) {
     if(!isValidCanvas()) return;
     const dataURL = canvas.toDataURL('image/png');
-
-    const img = document.createElement('img');
-    img.src = dataURL;
-    img.width = canvas.width / 5;
-    img.height = canvas.height / 5;
-    imagesContainer.appendChild(img);
+    addImageToContainer(dataURL, imagesContainer, 5);
+    // console.log(imagesContainer.querySelectorAll('img'));
 
     const path = await sendImage(dataURL);
 
