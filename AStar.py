@@ -20,7 +20,7 @@ class AStar:
         return row == dest[0] and col == dest[1]
 
     # TODO: check if it's faster to remove the root operation entirely when root is 1
-    def __euclidean_dist(self, row: int, col: int, dest: tuple, root: Literal[0.5, 1] = 0.5) -> float:
+    def __euclidean_dist(self, row: int, col: int, dest: tuple, root: float = 0.5) -> float:
         x_dist: int = row - dest[0]
         y_dist: int = col - dest[1]
         return ((x_dist) ** 2 + (y_dist) ** 2) ** root
@@ -32,6 +32,11 @@ class AStar:
     
     def __chebyschev_dist(self, row: int, col: int, dest: tuple) -> float:
         return max(abs(a - b) for a, b in zip([row, col], dest))
+
+    def __move_cost(self, delta_row: int, delta_col: int) -> float:
+        if delta_row != 0 and delta_col != 0:
+            return 2 ** 0.5
+        return 1.0
 
     # Calculate the heuristic value of a cell (Euclidean distance to destination)
     def _h_value(self, row: int, col: int, dest: tuple, method: Literal["euclidean", "manhattan", "chebyshev"] = "euclidean", weight: float = 1.0) -> float:
@@ -108,7 +113,13 @@ class AStar:
             # Mark the cell as visited
             i = p[1]
             j = p[2]
+            if closed_list[i][j]:
+                continue
             closed_list[i][j] = True
+
+            # The first time the destination is popped, shortest path has been found.
+            if self._is_destination(i, j, dest):
+                return self._trace_path(cell_details, dest)
 
             # For each direction, check the successors
             directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
@@ -118,33 +129,24 @@ class AStar:
 
                 # If the successor is valid, unblocked, and not visited
                 if self._is_valid(new_i, new_j) and self._is_unblocked(grid, new_i, new_j) and not closed_list[new_i][new_j]:
-                    # If the successor is the destination
-                    if self._is_destination(new_i, new_j, dest):
-                        # Set the parent of the destination cell
+                    # Calculate the new f, g, and h values
+                    g_new = cell_details[i][j].g + self.__move_cost(dir[0], dir[1])
+                    h_new = self._h_value(new_i, new_j, dest, h_method, weight)
+                    f_new = g_new + h_new
+
+                    # If the cell is not in the open list or the new f value is smaller
+                    if cell_details[new_i][new_j].f == float('inf') or cell_details[new_i][new_j].f > f_new:
+                        # Add the cell to the open list
+                        heapq.heappush(open_list, (f_new, new_i, new_j))
+                        # Update the cell details
+                        cell_details[new_i][new_j].f = f_new
+                        cell_details[new_i][new_j].g = g_new
+                        cell_details[new_i][new_j].h = h_new
                         cell_details[new_i][new_j].parent_i = i
                         cell_details[new_i][new_j].parent_j = j
-                        # Trace path from source to destination
-                        path = self._trace_path(cell_details, dest)
-                        found_dest = True
-                        return path
-                    else:
-                        # Calculate the new f, g, and h values
-                        g_new = cell_details[i][j].g + 1.0
-                        h_new = self._h_value(new_i, new_j, dest, h_method, weight)
-                        f_new = g_new + h_new
-
-                        # If the cell is not in the open list or the new f value is smaller
-                        if cell_details[new_i][new_j].f == float('inf') or cell_details[new_i][new_j].f > f_new:
-                            # Add the cell to the open list
-                            heapq.heappush(open_list, (f_new, new_i, new_j))
-                            # Update the cell details
-                            cell_details[new_i][new_j].f = f_new
-                            cell_details[new_i][new_j].g = g_new
-                            cell_details[new_i][new_j].h = h_new
-                            cell_details[new_i][new_j].parent_i = i
-                            cell_details[new_i][new_j].parent_j = j
 
         # If the destination is not found after visiting all cells
         if not found_dest:
             print("Failed to find the destination cell")
-            return []
+
+        return []
