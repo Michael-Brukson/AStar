@@ -26,7 +26,7 @@ def astar_tkinter(plotter: Plotting = Plotting()) -> None:
     # gm.run()
 
     # grid, src, dest = plotter.from_image(gm.get_filename(dir=True))
-    grid, src, dest = plotter.from_image("mazes/2026-02-20T001455.073Z.png")
+    grid, src, dest = plotter.from_image("mazes/maze.png")
     print(f"{src} -> {dest}")
 
     a: AStar = AStar(*grid.shape)
@@ -35,6 +35,7 @@ def astar_tkinter(plotter: Plotting = Plotting()) -> None:
     path: np.ndarray = np.array(a.search(grid, src, dest))
     # print(f"The path is: \n{path}")
 
+    # plotter.show_grid(grid=grid)
     # plotter.show_grid(grid=grid)
     plotter.show_grid(grid=grid, path=path)
 

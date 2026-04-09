@@ -112,6 +112,7 @@ async function sendImage(dataURL){
     const time = new Date().toISOString();
     formData.append('upload', blob, `${time}.png`);
     formData.append('h_method', h_method_dropdown.value);
+    formData.append('weight', weight.value);
 
     const response = await fetch('/get_path', {
         method: 'POST',

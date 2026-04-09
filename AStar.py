@@ -34,13 +34,13 @@ class AStar:
         return max(abs(a - b) for a, b in zip([row, col], dest))
 
     # Calculate the heuristic value of a cell (Euclidean distance to destination)
-    def _h_value(self, row: int, col: int, dest: tuple, method: Literal["euclidean", "manhattan", "chebyshev"] = "euclidean") -> float:
+    def _h_value(self, row: int, col: int, dest: tuple, method: Literal["euclidean", "manhattan", "chebyshev"] = "euclidean", weight: float = 1.0) -> float:
         if method == "euclidean":
-            return self.__euclidean_dist(row, col, dest)
+            return weight * self.__euclidean_dist(row, col, dest)
         elif method == "manhattan":
-            return self.__manhattan_dist(row, col, dest)
+            return weight * self.__manhattan_dist(row, col, dest)
         else:
-            return self.__chebyschev_dist(row, col, dest)
+            return weight * self.__chebyschev_dist(row, col, dest)
 
     # Trace the path from source to destination
     def _trace_path(self, cell_details: list, dest: tuple) -> list:
@@ -63,7 +63,7 @@ class AStar:
         return path
 
     # Implement the A* search algorithm
-    def search(self, grid: list, src: tuple, dest: tuple, h_method: Literal["euclidean", "manhattan", "chebyshev"] = "euclidean") -> list:
+    def search(self, grid: list, src: tuple, dest: tuple, h_method: Literal["euclidean", "manhattan", "chebyshev"] = "euclidean", weight: float = 1.0) -> list:
         # Check if the source and destination are valid
         if not self._is_valid(src[0], src[1]) or not self._is_valid(dest[0], dest[1]):
             # print("Source or destination is out of reach")
@@ -130,7 +130,7 @@ class AStar:
                     else:
                         # Calculate the new f, g, and h values
                         g_new = cell_details[i][j].g + 1.0
-                        h_new = self._h_value(new_i, new_j, dest, h_method)
+                        h_new = self._h_value(new_i, new_j, dest, h_method, weight)
                         f_new = g_new + h_new
 
                         # If the cell is not in the open list or the new f value is smaller

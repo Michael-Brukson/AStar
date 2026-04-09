@@ -41,6 +41,7 @@ def route_(app: Flask) -> routing.Map:
             return redirect(request.url)
         
         h_method: str = request.form.get('h_method')
+        weight: float = float(request.form.get('weight'))
         
         file = request.files['upload']
         save_path: str = save_file(file)
@@ -49,7 +50,7 @@ def route_(app: Flask) -> routing.Map:
         p: Plotting = app.config['PLOTTER']
 
         grid, src, dest = p.from_image(save_path)
-        path: np.ndarray = np.array(a.search(grid, src, dest, h_method=h_method))
+        path: np.ndarray = np.array(a.search(grid, src, dest, h_method=h_method, weight=weight))
         
         return jsonify(path.tolist())
 

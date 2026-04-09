@@ -29,8 +29,9 @@
             </div>
 
             <div class="slidecontainer">
+                <label for="brushSize" class="smaller">Pen Size:</label>
                 <input type="range" min="1" max="20" step="any" value="5" id="brushSize">
-                <span id="brushSizeDisplay"></span>
+                <span id="brushSizeDisplay" class="smaller"></span>
             </div>
 
             <div class="h_method vertical">
@@ -45,6 +46,12 @@
 
                 <label class="equation" for="equation">Current H Statistic:</label>
                 <div class="equation" id="equation"></div>
+            </div>
+
+            <div class="slidecontainer">
+                <label for="weight" class="smaller">Weight:</label>
+                <input type="range" min="0" max="20" step="any" value="1" id="weight">
+                <span id="weightDisplay" class="smaller"></span>
             </div>
             
             <button id="submitMap">Submit Map</button>

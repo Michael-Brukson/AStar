@@ -23,7 +23,7 @@ body {
     min-height: 100vh;
     padding: 0px;
     font-family: 'Lato', sans-serif;
-    font-size: clamp(40px, 2.2vw, 50px);
+    font-size: clamp(40px, 2.2vw, 40px);
     background-color: #f0f0f0;
 }
 
@@ -85,6 +85,10 @@ button{
     display: flex;
     width: fit-content;
     overflow: auto;
+}
+
+.smaller {
+    font-size: 25px
 }
 
 #h_method_dropdown{

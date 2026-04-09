@@ -8,8 +8,10 @@
 
 h_method_dropdown.addEventListener('change', updateEquation);
 brushSize.addEventListener('input', updateBrushSizeDisplay);
+weight.addEventListener('input', updateWeightDisplay);
 
 updateBrushSizeDisplay();
+updateWeightDisplay();
 updateEquation();
 
 function updateEquation(){
@@ -22,4 +24,11 @@ function updateBrushSizeDisplay(){
     value = value.toFixed(2);
     document.documentElement.style.setProperty('--brushSizeThumbThickness', String(value) + 'px');
     brushSizeDisplay.innerHTML = String(value) + ' px';
+}
+
+function updateWeightDisplay(){
+    let value = parseFloat(weight.value);
+    value = value.toFixed(2);
+
+    weightDisplay.innerHTML = String(value);
 }
